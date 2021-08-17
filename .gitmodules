@@ -1,0 +1,6 @@
+[submodule "SmartBin-Classifier"]
+	path = SmartBin-Classifier
+	url = https://github.com/lavaskiller/SmartBin-Classifier
+[submodule "SmartBin-Detector"]
+	path = SmartBin-Detector
+	url = https://github.com/Jeong-Jingyo/SmartBin-Detector
