@@ -1,14 +1,15 @@
-from flask import Flask, request
+from flask import Flask, request, Response
 import cv2
 import numpy as np
 import importlib
 import importlib
+import json
 detector = importlib.import_module("SmartBin-Detector")
 classifier = importlib.import_module("SmartBin-Classifier")
 app = Flask(__name__)
 
 Classifier = classifier.Classifier()
-canDetector = detector.Detector("pet")
+petDetector = detector.Detector("pet")
 
 
 @app.route('/ai', methods=['POST'])
@@ -17,10 +18,14 @@ def mainAPI():
     image_array = np.asarray(bytearray(image_file.read()), dtype=np.uint8)
 
     classification = Classifier.classify(image_array)
+    classification = classification.tolist()[0]
 
-    detection = canDetector.detect(image_array)
+    detection = petDetector.detect(image_array)
 
-    return f"{detection}\n-------------------------\n{classification}"
+    body = {"trashType": classification, "foreignSubst": detection}
+    body = json.dumps(body)
+
+    return Response(body, mimetype="application/javascript")
 
 
 @app.route('/ai')
@@ -30,4 +35,4 @@ def main():
          '<input type = "submit"/></form></body></html>'
 
 
-app.run(debug=True)
+app.run(debug=False)
